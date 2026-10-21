@@ -1,0 +1,185 @@
+2026-10-21 06:58:08,448 | INFO | server_module | ===== MCP SERVER STARTED =====
+2026-10-21 06:58:08,449 | DEBUG | server_module | Debug logging is working
+2026-10-21 06:58:16,500 | INFO | server_module | ===== MCP SERVER STARTED =====
+2026-10-21 06:58:16,500 | DEBUG | server_module | Debug logging is working
+2026-10-21 06:58:16,526 | DEBUG | asyncio | Using selector: EpollSelector
+2026-10-21 06:58:16,564 | DEBUG | mcp.server.runner | no handler for notification notifications/initialized
+2026-10-21 06:58:16,616 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing resources
+2026-10-21 06:58:16,631 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing templates
+2026-10-21 06:58:42,999 | INFO | server_module | list_files called with path: .
+2026-10-21 06:58:42,999 | DEBUG | utils | Validating path=. against root=/home/sugatalinux/projects
+2026-10-21 06:58:42,999 | DEBUG | utils | Resolved requested Path: /home/sugatalinux/projects
+2026-10-21 06:58:42,999 | INFO | server_module | Resolved path is /home/sugatalinux/projects
+2026-10-21 06:58:43,000 | ERROR | mcp.server.mcpserver.server | Tool 'list_files' raised an unexpected exception
+Traceback (most recent call last):
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/tools/base.py", line 179, in run
+    result = await self.fn_metadata.call_fn(self.fn, self.is_async, validated, pass_directly)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/utilities/func_metadata.py", line 164, in call_fn
+    return await anyio.to_thread.run_sync(functools.partial(fn, **kwargs))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 2706, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 1100, in run
+    result = context.run(func, *args)
+  File "/home/sugatalinux/projects/codebase-mcp/server.py", line 36, in list_files
+    utils.recursive_file_list(files, reason_or_path)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/utils.py", line 16, in recursive_file_list
+    if path.is_dir() and not EXCLUDE_DIRECTORY.search(path):
+                             ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+TypeError: expected string or bytes-like object, got 'PosixPath'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/server.py", line 442, in _handle_call_tool
+    return await self.call_tool(params.name, params.arguments or {}, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/server.py", line 548, in call_tool
+    return await self._tool_manager.call_tool(name, arguments, context, convert_result=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/tools/tool_manager.py", line 87, in call_tool
+    return await tool.run(arguments, context, convert_result=convert_result)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/tools/base.py", line 213, in run
+    raise UnexpectedToolError(f"Error executing tool {self.name}") from exc
+mcp.server.mcpserver.exceptions.UnexpectedToolError: Error executing tool list_files
+2026-10-21 07:00:15,002 | INFO | server_module | ===== MCP SERVER STARTED =====
+2026-10-21 07:00:15,002 | DEBUG | server_module | Debug logging is working
+2026-10-21 07:00:34,450 | INFO | server_module | ===== MCP SERVER STARTED =====
+2026-10-21 07:00:34,451 | DEBUG | server_module | Debug logging is working
+2026-10-21 07:00:34,481 | DEBUG | asyncio | Using selector: EpollSelector
+2026-10-21 07:00:34,529 | DEBUG | mcp.server.runner | no handler for notification notifications/initialized
+2026-10-21 07:00:34,595 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing resources
+2026-10-21 07:00:34,614 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing templates
+2026-10-21 07:00:39,918 | INFO | server_module | list_files called with path: .
+2026-10-21 07:00:39,918 | DEBUG | utils | Validating path=. against root=/home/sugatalinux/projects
+2026-10-21 07:00:39,919 | DEBUG | utils | Resolved requested Path: /home/sugatalinux/projects
+2026-10-21 07:00:39,919 | INFO | server_module | Resolved path is /home/sugatalinux/projects
+2026-10-21 07:00:39,922 | INFO | server_module | Found 3 files 
+2026-10-21 07:33:18,086 | INFO | server_module | ===== MCP SERVER STARTED =====
+2026-10-21 07:33:18,088 | DEBUG | server_module | Debug logging is working
+2026-10-21 07:33:25,861 | INFO | server_module | ===== MCP SERVER STARTED =====
+2026-10-21 07:33:25,861 | DEBUG | server_module | Debug logging is working
+2026-10-21 07:33:25,888 | DEBUG | asyncio | Using selector: EpollSelector
+2026-10-21 07:33:25,933 | DEBUG | mcp.server.runner | no handler for notification notifications/initialized
+2026-10-21 07:33:25,991 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing resources
+2026-10-21 07:33:25,994 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing templates
+2026-10-21 07:34:16,598 | ERROR | mcp.server.mcpserver.server | Tool 'read_file' raised an unexpected exception
+Traceback (most recent call last):
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/tools/base.py", line 179, in run
+    result = await self.fn_metadata.call_fn(self.fn, self.is_async, validated, pass_directly)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/utilities/func_metadata.py", line 164, in call_fn
+    return await anyio.to_thread.run_sync(functools.partial(fn, **kwargs))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 2706, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 1100, in run
+    result = context.run(func, *args)
+  File "/home/sugatalinux/projects/codebase-mcp/server.py", line 42, in read_file
+    pathObject=Path(str(CODEBASE_PATH)/path).resolve()
+                    ~~~~~~~~~~~~~~~~~~^~~~~
+TypeError: unsupported operand type(s) for /: 'str' and 'str'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/server.py", line 442, in _handle_call_tool
+    return await self.call_tool(params.name, params.arguments or {}, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/server.py", line 548, in call_tool
+    return await self._tool_manager.call_tool(name, arguments, context, convert_result=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/tools/tool_manager.py", line 87, in call_tool
+    return await tool.run(arguments, context, convert_result=convert_result)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/tools/base.py", line 213, in run
+    raise UnexpectedToolError(f"Error executing tool {self.name}") from exc
+mcp.server.mcpserver.exceptions.UnexpectedToolError: Error executing tool read_file
+2026-10-21 07:35:50,647 | INFO | server_module | ===== MCP SERVER STARTED =====
+2026-10-21 07:35:50,647 | DEBUG | server_module | Debug logging is working
+2026-10-21 07:36:00,745 | INFO | server_module | ===== MCP SERVER STARTED =====
+2026-10-21 07:36:00,746 | DEBUG | server_module | Debug logging is working
+2026-10-21 07:36:00,780 | DEBUG | asyncio | Using selector: EpollSelector
+2026-10-21 07:36:00,830 | DEBUG | mcp.server.runner | no handler for notification notifications/initialized
+2026-10-21 07:36:00,882 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing resources
+2026-10-21 07:36:00,907 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing templates
+2026-10-21 07:36:24,938 | DEBUG | utils | Validating Start 1 and end lines 4000
+2026-10-21 07:36:24,938 | WARNING | utils | Number of lines requested 4000 is greater than the number of lines in file /home/sugatalinux/projects/codebase-mcp/server.py which is 73
+2026-10-21 07:37:11,975 | DEBUG | utils | Validating Start 1 and end lines 71
+2026-10-21 07:37:11,976 | ERROR | mcp.server.mcpserver.server | Tool 'read_file' raised an unexpected exception
+Traceback (most recent call last):
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/tools/base.py", line 179, in run
+    result = await self.fn_metadata.call_fn(self.fn, self.is_async, validated, pass_directly)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/utilities/func_metadata.py", line 164, in call_fn
+    return await anyio.to_thread.run_sync(functools.partial(fn, **kwargs))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 2706, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 1100, in run
+    result = context.run(func, *args)
+  File "/home/sugatalinux/projects/codebase-mcp/server.py", line 43, in read_file
+    flag, reason=utils.validate_start_and_end_line(pathObject, start_line, end_line)
+    ^^^^^^^^^^^^
+TypeError: cannot unpack non-iterable NoneType object
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/server.py", line 442, in _handle_call_tool
+    return await self.call_tool(params.name, params.arguments or {}, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/server.py", line 548, in call_tool
+    return await self._tool_manager.call_tool(name, arguments, context, convert_result=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/tools/tool_manager.py", line 87, in call_tool
+    return await tool.run(arguments, context, convert_result=convert_result)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/tools/base.py", line 213, in run
+    raise UnexpectedToolError(f"Error executing tool {self.name}") from exc
+mcp.server.mcpserver.exceptions.UnexpectedToolError: Error executing tool read_file
+2026-10-21 07:38:55,823 | INFO | server_module | ===== MCP SERVER STARTED =====
+2026-10-21 07:38:55,823 | DEBUG | server_module | Debug logging is working
+2026-10-21 07:39:03,980 | INFO | server_module | ===== MCP SERVER STARTED =====
+2026-10-21 07:39:03,980 | DEBUG | server_module | Debug logging is working
+2026-10-21 07:39:04,001 | DEBUG | asyncio | Using selector: EpollSelector
+2026-10-21 07:39:04,038 | DEBUG | mcp.server.runner | no handler for notification notifications/initialized
+2026-10-21 07:39:04,082 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing resources
+2026-10-21 07:39:04,102 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing templates
+2026-10-21 07:39:32,221 | DEBUG | utils | Validating Start 1 and end lines 70
+2026-10-21 07:43:03,759 | INFO | server_module | ===== MCP SERVER STARTED =====
+2026-10-21 07:43:03,760 | DEBUG | server_module | Debug logging is working
+2026-10-21 07:43:11,892 | INFO | server_module | ===== MCP SERVER STARTED =====
+2026-10-21 07:43:11,893 | DEBUG | server_module | Debug logging is working
+2026-10-21 07:43:11,913 | DEBUG | asyncio | Using selector: EpollSelector
+2026-10-21 07:43:11,953 | DEBUG | mcp.server.runner | no handler for notification notifications/initialized
+2026-10-21 07:43:12,021 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing resources
+2026-10-21 07:43:12,026 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing templates
+2026-10-21 07:43:33,530 | DEBUG | utils | Validating Start 1 and end lines 70
