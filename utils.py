@@ -41,10 +41,43 @@ def validate_start_and_end_line(file_path_object:Path, start_line:int, end_line:
             logger.warning("End Line %d is less than Start Line %d", end_line, start_line)
             return False, f"End line {end_line} is less than Start line {start_line}"
         size=0
-        with open(str(file_path_object)) as f:
-            size=len(f.readlines())
-            if end_line-start_line+1>size:
-                logger.warning("Number of lines requested %d is greater than the number of lines in file %s which is %d", end_line-start_line+1, str(file_path_object), size)
-                return False, f"Number of lines requested {end_line-start_line+1} is greater than the number of lines in file {str(file_path_object)} which is {size}"
-            else:
-                return True, ""
+        try:
+            with open(str(file_path_object)) as f:
+                size=len(f.readlines())
+                if end_line-start_line+1>size:
+                    logger.warning("Number of lines requested %d is greater than the number of lines in file %s which is %d", end_line-start_line+1, str(file_path_object), size)
+                    return False, f"Number of lines requested {end_line-start_line+1} is greater than the number of lines in file {str(file_path_object)} which is {size}"
+                else:
+                    return True, ""
+        except OSError as e:
+            logging.warning(str(e))
+            return False, str(e)
+
+def search_literal_in_file(path: Path, literal:str, list_pattern_matches, max_matches_allowed:int)->bool:
+    with open(str(path)) as f:
+        for lineNumber, line in enumerate(f):
+            if literal in line :
+                if len(list_pattern_matches)<max_matches_allowed:
+                    lineData={}
+                    lineData["path"]=str(path.resolve())
+                    lineData["line"]=f"{lineNumber+1}: {line}"
+                    list_pattern_matches.append(lineData)
+                else:
+                    logging.debug("Number of instances of %s : %d till path %s", literal, len(list_pattern_matches), str(path))
+                    return True
+        return False
+
+def recursive_search_pattern_no_regex(path_to_search:Path, literal:str,list_pattern_matches,  max_matches_allowed:int)->bool:
+    if len(list_pattern_matches)>=max_matches_allowed:
+        return True
+    truncated=False
+    if path_to_search.is_dir():
+        for path in path_to_search.iterdir():
+            if path.is_dir() and not EXCLUDE_DIRECTORY.search(str(path)):
+                truncated=truncated or recursive_search_pattern_no_regex(path.resolve(), literal, list_pattern_matches, max_matches_allowed)
+            elif INCLUDE.search(str(path)):
+                truncated=truncated or search_literal_in_file(path.resolve(), literal, list_pattern_matches, max_matches_allowed)
+
+    elif INCLUDE.search(str(path_to_search)):
+        truncated=truncated or search_literal_in_file(path_to_search.resolve(),literal, list_pattern_matches, max_matches_allowed)
+    return truncated

@@ -4,10 +4,11 @@ import utils
 from pathlib import Path
 import json
 
-CODEBASE_PATH=Path("/home/sugatalinux/projects")
+CODEBASE_PATH=Path("/home/sugatalinux/projects/codebase-mcp/source-code")
 
 mcp=MCPServer("Legacy Codebase MCP Server")
 max_lines=200
+max_matches_allowed=2000
 
 logging.basicConfig(
     filename="/home/sugatalinux/projects/codebase-mcp/codebase-mcp.log",
@@ -17,9 +18,6 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
-
-logger.info("===== MCP SERVER STARTED =====")
-logger.debug("Debug logging is working")
 
 @mcp.tool()
 def hello(name:str)->str:
@@ -39,7 +37,7 @@ def list_files(path:str=".")->str:
     return "\n".join(sorted(str(file) for file in files))
 
 @mcp.tool()
-def read_file(path:str, start_line:int, end_line:int|None)->str:
+def read_file(path:str, start_line:int, end_line:int|None=None)->str:
     pathObject=Path(CODEBASE_PATH/Path(path)).resolve()
     flag, reason=utils.validate_start_and_end_line(pathObject, start_line, end_line)
     if not flag:
@@ -59,16 +57,31 @@ def read_file(path:str, start_line:int, end_line:int|None)->str:
                 else:
                     break
             count+=1
-    content="\n".join(lines)
     toReturnDict["truncated"]=truncated
     toReturnDict["start_line"]=start_line
     toReturnDict["end_line"]=end_line_new
     toReturnDict["max_lines"]=max_lines
-    toReturnDict["content"]=content
+    toReturnDict["content"]=lines
     return json.dumps(toReturnDict)
 
     
-
+@mcp.tool()
+def search_code(pattern:str, path:str='.', is_regex:bool=False):
+    path_to_search=Path(CODEBASE_PATH/Path(path)).resolve()
+    if not path_to_search.exists():
+        logging.warning("Path %s does not exist", str(path_to_search))
+        return f"Path {str(path_to_search)} does not exist"
+    if not is_regex:
+        list_pattern_matches=[]
+        truncated=utils.recursive_search_pattern_no_regex(path_to_search, pattern, list_pattern_matches, max_matches_allowed)
+        matches=len(list_pattern_matches)
+        toReturnObject={}
+        toReturnObject["matches"]=matches
+        toReturnObject["truncated"]=truncated
+        toReturnObject["content"]=list_pattern_matches
+        toReturnObject["max_matches_allowed"]=max_matches_allowed
+        logging.info("Number of instances matched with literal %s is %d", str(path_to_search), list_pattern_matches)
+        return json.dumps(toReturnObject)
 
 if __name__=="__main__":
     mcp.run()

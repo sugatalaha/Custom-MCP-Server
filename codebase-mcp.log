@@ -183,3 +183,77 @@ mcp.server.mcpserver.exceptions.UnexpectedToolError: Error executing tool read_f
 2026-10-21 07:43:12,021 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing resources
 2026-10-21 07:43:12,026 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing templates
 2026-10-21 07:43:33,530 | DEBUG | utils | Validating Start 1 and end lines 70
+2026-10-22 10:58:39,303 | DEBUG | asyncio | Using selector: EpollSelector
+2026-10-22 10:58:39,344 | DEBUG | mcp.server.runner | no handler for notification notifications/initialized
+2026-10-22 10:58:39,383 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing resources
+2026-10-22 10:58:39,399 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing templates
+2026-10-22 10:59:32,652 | DEBUG | utils | Validating Start 1 and end lines 20
+2026-10-22 12:33:37,553 | DEBUG | asyncio | Using selector: EpollSelector
+2026-10-22 12:33:37,599 | DEBUG | mcp.server.runner | no handler for notification notifications/initialized
+2026-10-22 12:33:37,654 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing resources
+2026-10-22 12:33:37,668 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing templates
+2026-10-22 12:34:15,540 | ERROR | mcp.server.mcpserver.server | Tool 'search_code' raised an unexpected exception
+Traceback (most recent call last):
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/tools/base.py", line 179, in run
+    result = await self.fn_metadata.call_fn(self.fn, self.is_async, validated, pass_directly)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/utilities/func_metadata.py", line 164, in call_fn
+    return await anyio.to_thread.run_sync(functools.partial(fn, **kwargs))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        func, args, abandon_on_cancel=abandon_on_cancel, limiter=limiter
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 2706, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 1100, in run
+    result = context.run(func, *args)
+  File "/home/sugatalinux/projects/codebase-mcp/server.py", line 76, in search_code
+    truncated=utils.recursive_search_pattern_no_regex(path_to_search, pattern, list_pattern_matches, max_matches_allowed)
+  File "/home/sugatalinux/projects/codebase-mcp/utils.py", line 72, in recursive_search_pattern_no_regex
+    line.append(lineData)
+    ^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'append'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/server.py", line 442, in _handle_call_tool
+    return await self.call_tool(params.name, params.arguments or {}, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/server.py", line 548, in call_tool
+    return await self._tool_manager.call_tool(name, arguments, context, convert_result=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/tools/tool_manager.py", line 87, in call_tool
+    return await tool.run(arguments, context, convert_result=convert_result)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/tools/base.py", line 213, in run
+    raise UnexpectedToolError(f"Error executing tool {self.name}") from exc
+mcp.server.mcpserver.exceptions.UnexpectedToolError: Error executing tool search_code
+2026-10-22 12:35:01,052 | DEBUG | asyncio | Using selector: EpollSelector
+2026-10-22 12:35:01,102 | DEBUG | mcp.server.runner | no handler for notification notifications/initialized
+2026-10-22 12:35:01,156 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing resources
+2026-10-22 12:35:01,185 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing templates
+2026-10-22 12:43:19,309 | DEBUG | asyncio | Using selector: EpollSelector
+2026-10-22 12:43:19,360 | DEBUG | mcp.server.runner | no handler for notification notifications/initialized
+2026-10-22 12:43:19,417 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing resources
+2026-10-22 12:43:19,448 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing templates
+2026-10-22 13:03:27,912 | DEBUG | asyncio | Using selector: EpollSelector
+2026-10-22 13:03:27,971 | DEBUG | mcp.server.runner | no handler for notification notifications/initialized
+2026-10-22 13:03:28,235 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing resources
+2026-10-22 13:03:28,243 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing templates
+2026-10-22 13:06:20,743 | DEBUG | asyncio | Using selector: EpollSelector
+2026-10-22 13:06:20,808 | DEBUG | mcp.server.runner | no handler for notification notifications/initialized
+2026-10-22 13:06:20,872 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing resources
+2026-10-22 13:06:20,892 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing templates
+2026-10-22 13:28:41,291 | DEBUG | asyncio | Using selector: EpollSelector
+2026-10-22 13:28:41,321 | DEBUG | mcp.server.runner | no handler for notification notifications/initialized
+2026-10-22 13:28:41,354 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing resources
+2026-10-22 13:28:41,373 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing templates
+2026-10-22 13:29:10,239 | WARNING | root | Path /src does not exist
+2026-10-22 13:29:21,872 | WARNING | root | Path /home/sugatalinux/projects/codebase-mcp/source-code/src does not exist
+2026-10-22 13:29:36,141 | WARNING | root | Path /home/sugatalinux/projects/codebase-mcp/source-code/random-code.c does not exist
