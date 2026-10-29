@@ -257,3 +257,347 @@ mcp.server.mcpserver.exceptions.UnexpectedToolError: Error executing tool search
 2026-10-22 13:29:10,239 | WARNING | root | Path /src does not exist
 2026-10-22 13:29:21,872 | WARNING | root | Path /home/sugatalinux/projects/codebase-mcp/source-code/src does not exist
 2026-10-22 13:29:36,141 | WARNING | root | Path /home/sugatalinux/projects/codebase-mcp/source-code/random-code.c does not exist
+2026-10-23 14:48:18,144 | DEBUG | asyncio | Using selector: EpollSelector
+2026-10-23 14:48:18,184 | DEBUG | mcp.server.runner | no handler for notification notifications/initialized
+2026-10-23 14:48:18,230 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing resources
+2026-10-23 14:48:18,239 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing templates
+2026-10-23 14:59:17,232 | DEBUG | asyncio | Using selector: EpollSelector
+2026-10-23 14:59:17,273 | DEBUG | mcp.server.runner | no handler for notification notifications/initialized
+2026-10-23 14:59:17,331 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing resources
+2026-10-23 14:59:17,351 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing templates
+2026-10-23 14:59:48,724 | WARNING | root | Path /home/sugatalinux/projects/codebase-mcp/source-code/random_prog.o does not exist
+2026-10-23 15:08:49,665 | INFO | root | Number of instances matched with literal /home/sugatalinux/projects/codebase-mcp/source-code/utils is 2
+2026-10-23 15:09:21,003 | INFO | root | Number of instances matched with literal /home/sugatalinux/projects/codebase-mcp/source-code is 5
+2026-10-23 15:22:18,994 | DEBUG | asyncio | Using selector: EpollSelector
+2026-10-23 15:22:19,033 | DEBUG | mcp.server.runner | no handler for notification notifications/initialized
+2026-10-23 15:22:19,081 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing resources
+2026-10-23 15:22:19,101 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing templates
+2026-10-23 15:22:35,415 | DEBUG | root | Number of instances of int : 3 till path /home/sugatalinux/projects/codebase-mcp/source-code/random-program.c
+2026-10-23 15:22:35,416 | INFO | root | Number of instances matched with literal /home/sugatalinux/projects/codebase-mcp/source-code is 3
+2026-10-23 15:24:12,733 | DEBUG | asyncio | Using selector: EpollSelector
+2026-10-23 15:24:12,782 | DEBUG | mcp.server.runner | no handler for notification notifications/initialized
+2026-10-23 15:24:12,836 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing resources
+2026-10-23 15:24:12,861 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing templates
+2026-10-23 15:24:41,700 | DEBUG | root | Number of instances of int : 3 till path /home/sugatalinux/projects/codebase-mcp/source-code/random-program.c
+2026-10-23 15:24:41,700 | INFO | root | Number of instances matched with literal /home/sugatalinux/projects/codebase-mcp/source-code is 3
+2026-10-23 15:24:56,039 | INFO | root | Number of instances matched with literal /home/sugatalinux/projects/codebase-mcp/source-code is 0
+2026-10-23 16:09:41,798 | ERROR | asyncio | unhandled exception during asyncio.run() shutdown
+task: <Task finished name='mcp.server.mcpserver.server.MCPServer.run_stdio_async' coro=<MCPServer.run_stdio_async() done, defined at /home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py:2524> exception=RuntimeError("Attempted to exit a cancel scope that isn't the current tasks's current cancel scope")>
+  + Exception Group Traceback (most recent call last):
+  |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 847, in __aexit__
+  |     raise BaseExceptionGroup(
+  |         "unhandled errors in a TaskGroup", self._exceptions
+  |     ) from None
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Exception Group Traceback (most recent call last):
+    |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 847, in __aexit__
+    |     raise BaseExceptionGroup(
+    |         "unhandled errors in a TaskGroup", self._exceptions
+    |     ) from None
+    | BaseExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+    +-+---------------- 1 ----------------
+      | Traceback (most recent call last):
+      |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/streams/memory.py", line 118, in receive
+      |     return self.receive_nowait()
+      |            ~~~~~~~~~~~~~~~~~~~^^
+      |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/streams/memory.py", line 113, in receive_nowait
+      |     raise WouldBlock
+      | anyio._core._exceptions.WouldBlock
+      | 
+      | During handling of the above exception, another exception occurred:
+      | 
+      | Traceback (most recent call last):
+      |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/shared/jsonrpc_dispatcher.py", line 517, in run
+      |     async for item in self._read_stream:
+      |     ...<5 lines>...
+      |         await self._dispatch(item, on_request, on_notify, sender_ctx)
+      |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/shared/_context_streams.py", line 89, in __anext__
+      |     return await self.receive()
+      |            ^^^^^^^^^^^^^^^^^^^^
+      |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/shared/_context_streams.py", line 71, in receive
+      |     ctx, item = await self._inner.receive()
+      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/streams/memory.py", line 126, in receive
+      |     await receive_event.wait()
+      |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 1936, in wait
+      |     await self._event.wait()
+      |   File "/usr/lib/python3.14/asyncio/locks.py", line 213, in wait
+      |     await fut
+      | asyncio.exceptions.CancelledError
+      | 
+      | During handling of the above exception, another exception occurred:
+      | 
+      | Traceback (most recent call last):
+      |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/runner.py", line 709, in _replay_from_opening_request
+      |     yield opening_request, replayed
+      |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/runner.py", line 636, in serve_dual_era_loop
+      |     await _serve_legacy_stream(
+      |     ...<7 lines>...
+      |     )
+      |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/runner.py", line 750, in _serve_legacy_stream
+      |     await dispatcher.run(on_request, runner.on_notify)
+      |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/shared/jsonrpc_dispatcher.py", line 510, in run
+      |     async with anyio.create_task_group() as tg:
+      |                ~~~~~~~~~~~~~~~~~~~~~~~^^
+      |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 800, in __aexit__
+      |     async def __aexit__(
+      |     
+      |   File "/usr/lib/python3.14/asyncio/runners.py", line 166, in _on_sigint
+      |     raise KeyboardInterrupt()
+      | KeyboardInterrupt
+      +------------------------------------
+    | 
+    | During handling of the above exception, another exception occurred:
+    | 
+    | Traceback (most recent call last):
+    |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/stdio.py", line 212, in stdio_server
+    |     yield read_stream, write_stream
+    |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/server.py", line 1077, in run_stdio_async
+    |     await self._lowlevel_server.run(
+    |     ...<3 lines>...
+    |     )
+    |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/lowlevel/server.py", line 723, in run
+    |     await serve_dual_era_loop(
+    |     ...<6 lines>...
+    |     )
+    |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/runner.py", line 627, in serve_dual_era_loop
+    |     async with _replay_from_opening_request(read_stream) as (opening, replayed):
+    |                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+    |   File "/usr/lib/python3.14/contextlib.py", line 235, in __aexit__
+    |     await self.gen.athrow(value)
+    |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/runner.py", line 707, in _replay_from_opening_request
+    |     async with anyio.create_task_group() as tg:
+    |                ~~~~~~~~~~~~~~~~~~~~~~~^^
+    |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 853, in __aexit__
+    |     if self.cancel_scope.__exit__(type(exc), exc, exc.__traceback__):
+    |        ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 472, in __exit__
+    |     raise RuntimeError(
+    |     ...<2 lines>...
+    |     )
+    | RuntimeError: Attempted to exit a cancel scope that isn't the current tasks's current cancel scope
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 2531, in wrapper
+    return await func(*args)
+           ^^^^^^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/server.py", line 1076, in run_stdio_async
+    async with stdio_server() as (read_stream, write_stream):
+               ~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/contextlib.py", line 235, in __aexit__
+    await self.gen.athrow(value)
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/stdio.py", line 209, in stdio_server
+    async with anyio.create_task_group() as tg:
+               ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 853, in __aexit__
+    if self.cancel_scope.__exit__(type(exc), exc, exc.__traceback__):
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 472, in __exit__
+    raise RuntimeError(
+    ...<2 lines>...
+    )
+RuntimeError: Attempted to exit a cancel scope that isn't the current tasks's current cancel scope
+2026-10-23 16:09:56,128 | DEBUG | asyncio | Using selector: EpollSelector
+2026-10-23 16:09:56,174 | DEBUG | mcp.server.runner | no handler for notification notifications/initialized
+2026-10-23 16:09:56,229 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing resources
+2026-10-23 16:09:56,266 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing templates
+2026-10-23 16:11:27,240 | DEBUG | root | Number of instances of \bint\b : 3 till path /home/sugatalinux/projects/codebase-mcp/source-code/random-program.c
+2026-10-23 16:11:27,241 | INFO | root | Number of instances matched with literal /home/sugatalinux/projects/codebase-mcp/source-code is 3
+2026-10-23 16:12:11,868 | DEBUG | asyncio | Using selector: EpollSelector
+2026-10-23 16:12:11,909 | DEBUG | mcp.server.runner | no handler for notification notifications/initialized
+2026-10-23 16:12:11,953 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing resources
+2026-10-23 16:12:11,966 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing templates
+2026-10-23 16:12:27,573 | INFO | root | Number of instances matched with literal /home/sugatalinux/projects/codebase-mcp/source-code is 42
+2026-10-23 16:30:53,214 | DEBUG | asyncio | Using selector: EpollSelector
+2026-10-23 16:30:53,256 | DEBUG | mcp.server.runner | no handler for notification notifications/initialized
+2026-10-23 16:30:53,304 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing resources
+2026-10-23 16:30:53,314 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing templates
+2026-10-23 16:31:21,408 | INFO | root | Number of instances matched with literal /home/sugatalinux/projects/codebase-mcp/source-code is 5
+2026-10-23 16:36:20,790 | WARNING | root | Path /home/sugatalinux/projects/etc does not exist
+2026-10-23 16:46:46,635 | DEBUG | asyncio | Using selector: EpollSelector
+2026-10-23 16:46:46,708 | DEBUG | mcp.server.runner | no handler for notification notifications/initialized
+2026-10-23 16:46:46,776 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing resources
+2026-10-23 16:46:46,804 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing templates
+2026-10-23 16:47:11,842 | DEBUG | utils | Validating path=../../../../etc against root=/home/sugatalinux/projects/codebase-mcp/source-code
+2026-10-23 16:47:11,843 | DEBUG | utils | Resolved requested Path: /home/etc
+2026-10-23 16:47:11,845 | WARNING | utils | Path does not exist /home/etc in /home/sugatalinux/projects/codebase-mcp/source-code
+2026-10-23 16:47:11,845 | WARNING | server_module | Path is not valid : reason Path /home/etc does not exist in /home/sugatalinux/projects/codebase-mcp/source-code
+2026-10-24 03:18:57,681 | ERROR | asyncio | unhandled exception during asyncio.run() shutdown
+task: <Task finished name='mcp.server.mcpserver.server.MCPServer.run_stdio_async' coro=<MCPServer.run_stdio_async() done, defined at /home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py:2524> exception=RuntimeError("Attempted to exit a cancel scope that isn't the current tasks's current cancel scope")>
+  + Exception Group Traceback (most recent call last):
+  |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 847, in __aexit__
+  |     raise BaseExceptionGroup(
+  |         "unhandled errors in a TaskGroup", self._exceptions
+  |     ) from None
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Exception Group Traceback (most recent call last):
+    |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 847, in __aexit__
+    |     raise BaseExceptionGroup(
+    |         "unhandled errors in a TaskGroup", self._exceptions
+    |     ) from None
+    | BaseExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+    +-+---------------- 1 ----------------
+      | Exception Group Traceback (most recent call last):
+      |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/runner.py", line 750, in _serve_legacy_stream
+      |     await dispatcher.run(on_request, runner.on_notify)
+      |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/shared/jsonrpc_dispatcher.py", line 510, in run
+      |     async with anyio.create_task_group() as tg:
+      |                ~~~~~~~~~~~~~~~~~~~~~~~^^
+      |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 847, in __aexit__
+      |     raise BaseExceptionGroup(
+      |         "unhandled errors in a TaskGroup", self._exceptions
+      |     ) from None
+      | BaseExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+      +-+---------------- 1 ----------------
+        | Traceback (most recent call last):
+        |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/streams/memory.py", line 118, in receive
+        |     return self.receive_nowait()
+        |            ~~~~~~~~~~~~~~~~~~~^^
+        |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/streams/memory.py", line 113, in receive_nowait
+        |     raise WouldBlock
+        | anyio._core._exceptions.WouldBlock
+        | 
+        | During handling of the above exception, another exception occurred:
+        | 
+        | Traceback (most recent call last):
+        |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/shared/jsonrpc_dispatcher.py", line 517, in run
+        |     async for item in self._read_stream:
+        |     ...<5 lines>...
+        |         await self._dispatch(item, on_request, on_notify, sender_ctx)
+        |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/shared/_context_streams.py", line 89, in __anext__
+        |     return await self.receive()
+        |            ^^^^^^^^^^^^^^^^^^^^
+        |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/shared/_context_streams.py", line 71, in receive
+        |     ctx, item = await self._inner.receive()
+        |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/streams/memory.py", line 126, in receive
+        |     await receive_event.wait()
+        |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 1936, in wait
+        |     await self._event.wait()
+        |   File "/usr/lib/python3.14/asyncio/locks.py", line 213, in wait
+        |     await fut
+        | asyncio.exceptions.CancelledError
+        | 
+        | During handling of the above exception, another exception occurred:
+        | 
+        | Traceback (most recent call last):
+        |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/shared/jsonrpc_dispatcher.py", line 515, in run
+        |     async with self._read_stream:
+        |                ^^^^^^^^^^^^^^^^^
+        |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/shared/_context_streams.py", line 96, in __aexit__
+        |     async def __aexit__(
+        |     
+        | KeyboardInterrupt
+        | 
+        | During handling of the above exception, another exception occurred:
+        | 
+        | Traceback (most recent call last):
+        |   File "/usr/lib/python3.14/reprlib.py", line 21, in wrapper
+        |     result = user_function(self)
+        |   File "/usr/lib/python3.14/asyncio/base_tasks.py", line 30, in _task_repr
+        |     info = ' '.join(_task_repr_info(task))
+        |                     ~~~~~~~~~~~~~~~^^^^^^
+        |   File "/usr/lib/python3.14/asyncio/base_tasks.py", line 22, in _task_repr_info
+        |     coro = coroutines._format_coroutine(task._coro)
+        |   File "/usr/lib/python3.14/asyncio/coroutines.py", line 89, in _format_coroutine
+        |     coro_name = get_name(coro)
+        |   File "/usr/lib/python3.14/asyncio/coroutines.py", line 65, in get_name
+        |     if hasattr(coro, '__qualname__') and coro.__qualname__:
+        |        ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+        | KeyboardInterrupt
+        | 
+        | During handling of the above exception, another exception occurred:
+        | 
+        | Traceback (most recent call last):
+        |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/shared/jsonrpc_dispatcher.py", line 534, in run
+        |     tg.cancel_scope.cancel()
+        |     ~~~~~~~~~~~~~~~~~~~~~~^^
+        |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 679, in cancel
+        |     self._cancel_reason += f" by {task}"
+        |                                  ^^^^^^
+        |   File "/usr/lib/python3.14/reprlib.py", line 23, in wrapper
+        |     repr_running.discard(key)
+        |     ~~~~~~~~~~~~~~~~~~~~^^^^^
+        | KeyboardInterrupt
+        +------------------------------------
+      | 
+      | During handling of the above exception, another exception occurred:
+      | 
+      | Traceback (most recent call last):
+      |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/runner.py", line 709, in _replay_from_opening_request
+      |     yield opening_request, replayed
+      |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/runner.py", line 636, in serve_dual_era_loop
+      |     await _serve_legacy_stream(
+      |     ...<7 lines>...
+      |     )
+      |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/runner.py", line 752, in _serve_legacy_stream
+      |     await aclose_shielded(connection)
+      |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/runner.py", line 136, in aclose_shielded
+      |     with anyio.move_on_after(_EXIT_STACK_CLOSE_TIMEOUT, shield=True) as scope:
+      |          ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 444, in __enter__
+      |     self._timeout()
+      |     ~~~~~~~~~~~~~^^
+      |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 579, in _timeout
+      |     self._timeout_handle = loop.call_at(self._deadline, self._timeout)
+      |                            ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      |   File "/usr/lib/python3.14/asyncio/base_events.py", line 810, in call_at
+      |     timer = events.TimerHandle(when, callback, args, self, context)
+      | KeyboardInterrupt
+    | 
+    | During handling of the above exception, another exception occurred:
+    | 
+    | Traceback (most recent call last):
+    |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/stdio.py", line 212, in stdio_server
+    |     yield read_stream, write_stream
+    |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/server.py", line 1077, in run_stdio_async
+    |     await self._lowlevel_server.run(
+    |     ...<3 lines>...
+    |     )
+    |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/lowlevel/server.py", line 723, in run
+    |     await serve_dual_era_loop(
+    |     ...<6 lines>...
+    |     )
+    |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/runner.py", line 627, in serve_dual_era_loop
+    |     async with _replay_from_opening_request(read_stream) as (opening, replayed):
+    |                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+    |   File "/usr/lib/python3.14/contextlib.py", line 235, in __aexit__
+    |     await self.gen.athrow(value)
+    |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/runner.py", line 707, in _replay_from_opening_request
+    |     async with anyio.create_task_group() as tg:
+    |                ~~~~~~~~~~~~~~~~~~~~~~~^^
+    |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 853, in __aexit__
+    |     if self.cancel_scope.__exit__(type(exc), exc, exc.__traceback__):
+    |        ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 472, in __exit__
+    |     raise RuntimeError(
+    |     ...<2 lines>...
+    |     )
+    | RuntimeError: Attempted to exit a cancel scope that isn't the current tasks's current cancel scope
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 2531, in wrapper
+    return await func(*args)
+           ^^^^^^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/mcpserver/server.py", line 1076, in run_stdio_async
+    async with stdio_server() as (read_stream, write_stream):
+               ~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/contextlib.py", line 235, in __aexit__
+    await self.gen.athrow(value)
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/mcp/server/stdio.py", line 209, in stdio_server
+    async with anyio.create_task_group() as tg:
+               ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 853, in __aexit__
+    if self.cancel_scope.__exit__(type(exc), exc, exc.__traceback__):
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sugatalinux/projects/codebase-mcp/.venv/lib/python3.14/site-packages/anyio/_backends/_asyncio.py", line 472, in __exit__
+    raise RuntimeError(
+    ...<2 lines>...
+    )
+RuntimeError: Attempted to exit a cancel scope that isn't the current tasks's current cancel scope

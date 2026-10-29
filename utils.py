@@ -25,9 +25,9 @@ def check_is_valid_path(file_path:str, root_dir:Path):
         return False, f"Path {file_path} is absolute path. Provide path relative to codebase {root_dir}"
     requested_path=(root_dir/file_path).resolve()
     logger.debug("Resolved requested Path: %s", requested_path)
-    if not requested_path.exists():
-        logger.warning("Path does not exist %s", requested_path)
-        return False, f"Path {requested_path.resolve()} does not exist"
+    if not requested_path.is_relative_to(root_dir):
+        logger.warning("Path does not exist %s in %s", str(requested_path), str(root_dir))
+        return False, f"Path {requested_path.resolve()} does not exist in {str(root_dir)}"
     else:
         return True, requested_path
 
@@ -56,14 +56,30 @@ def validate_start_and_end_line(file_path_object:Path, start_line:int, end_line:
 def search_literal_in_file(path: Path, literal:str, list_pattern_matches, max_matches_allowed:int)->bool:
     with open(str(path)) as f:
         for lineNumber, line in enumerate(f):
-            if literal in line :
+            if literal in line:
                 if len(list_pattern_matches)<max_matches_allowed:
                     lineData={}
                     lineData["path"]=str(path.resolve())
-                    lineData["line"]=f"{lineNumber+1}: {line}"
+                    lineData["line_number"]=lineNumber+1
+                    lineData["line"]=line[:-1]
                     list_pattern_matches.append(lineData)
                 else:
                     logging.debug("Number of instances of %s : %d till path %s", literal, len(list_pattern_matches), str(path))
+                    return True
+        return False
+
+def search_pattern_in_file(path:Path, pattern:str, list_pattern_matches, max_matches_allowed)->bool:
+    with open(str(path)) as f:
+        for lineNumber, line in enumerate(f):
+            if re.compile(pattern).search(line):
+                if len(list_pattern_matches)<max_matches_allowed:
+                    lineData={}
+                    lineData["path"]=str(path.resolve())
+                    lineData["line_number"]=lineNumber+1
+                    lineData["line"]=line[:-1]
+                    list_pattern_matches.append(lineData)
+                else:
+                    logging.debug("Number of instances of %s : %d till path %s", pattern, len(list_pattern_matches), str(path))
                     return True
         return False
 
@@ -80,4 +96,19 @@ def recursive_search_pattern_no_regex(path_to_search:Path, literal:str,list_patt
 
     elif INCLUDE.search(str(path_to_search)):
         truncated=truncated or search_literal_in_file(path_to_search.resolve(),literal, list_pattern_matches, max_matches_allowed)
+    return truncated
+
+def recurisve_search_pattern_regex(path_to_search:Path, pattern:str, list_pattern_matches, max_matches_allowed:int)->bool:
+    if len(list_pattern_matches)>=max_matches_allowed:
+        return True
+    truncated=False
+    if path_to_search.is_dir():
+        for path in path_to_search.iterdir():
+            if path.is_dir() and not EXCLUDE_DIRECTORY.search(str(path)):
+                truncated=truncated or recurisve_search_pattern_regex(path.resolve(), pattern, list_pattern_matches, max_matches_allowed)
+            elif INCLUDE.search(str(path)):
+                truncated=truncated or search_pattern_in_file(path.resolve(), pattern, list_pattern_matches, max_matches_allowed)
+
+    elif INCLUDE.search(str(path_to_search)):
+        truncated=truncated or search_pattern_in_file(path_to_search.resolve(),pattern, list_pattern_matches, max_matches_allowed)
     return truncated
