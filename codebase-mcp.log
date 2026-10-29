@@ -601,3 +601,17 @@ Traceback (most recent call last):
     ...<2 lines>...
     )
 RuntimeError: Attempted to exit a cancel scope that isn't the current tasks's current cancel scope
+2026-10-29 18:13:35,427 | DEBUG | asyncio | Using selector: EpollSelector
+2026-10-29 18:13:35,462 | DEBUG | mcp.server.runner | no handler for notification notifications/initialized
+2026-10-29 18:13:35,514 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing resources
+2026-10-29 18:13:35,538 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing templates
+2026-10-29 18:48:15,107 | DEBUG | asyncio | Using selector: EpollSelector
+2026-10-29 18:48:15,188 | DEBUG | mcp.server.runner | no handler for notification notifications/initialized
+2026-10-29 18:48:15,256 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing resources
+2026-10-29 18:48:15,280 | DEBUG | mcp.server.mcpserver.resources.resource_manager | Listing templates
+2026-10-29 18:48:31,693 | DEBUG | utils | Validating path=. against root=/home/sugatalinux/projects/codebase-mcp/source-code
+2026-10-29 18:48:31,693 | DEBUG | utils | Resolved requested Path: /home/sugatalinux/projects/codebase-mcp/source-code
+2026-10-29 18:48:31,699 | INFO | root | Number of instances matched with literal /home/sugatalinux/projects/codebase-mcp/source-code is 0
+2026-10-29 18:49:13,304 | DEBUG | utils | Validating path=. against root=/home/sugatalinux/projects/codebase-mcp/source-code
+2026-10-29 18:49:13,305 | DEBUG | utils | Resolved requested Path: /home/sugatalinux/projects/codebase-mcp/source-code
+2026-10-29 18:49:13,312 | INFO | root | Number of instances matched with literal /home/sugatalinux/projects/codebase-mcp/source-code is 60

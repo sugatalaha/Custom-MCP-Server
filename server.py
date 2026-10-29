@@ -75,7 +75,7 @@ def read_file(path:str, start_line:int, end_line:int|None=None)->str:
 
     
 @mcp.tool()
-def search_code(pattern:str, path:str='.', is_regex:bool=False):
+def search_code(pattern:str, path:str='.', is_regex:bool=False, offset:int=0):
     path_to_search=Path(CODEBASE_PATH/Path(path)).resolve()
     flag, reason_or_path=utils.check_is_valid_path(path, CODEBASE_PATH)
     if not flag:
@@ -87,11 +87,11 @@ def search_code(pattern:str, path:str='.', is_regex:bool=False):
     list_pattern_matches=[]
     toReturnObject={}
     if not is_regex:
-        truncated=utils.recursive_search_pattern_no_regex(path_to_search, pattern, list_pattern_matches, max_matches_allowed)
+        next_offset, has_more=utils.recursive_search_pattern_no_regex(path_to_search, pattern, list_pattern_matches, max_matches_allowed, offset)
         matches=len(list_pattern_matches)
     else:
         try:
-            truncated=utils.recurisve_search_pattern_regex(path_to_search, pattern, list_pattern_matches, max_matches_allowed)
+            next_offset, has_more=utils.recurisve_search_pattern_regex(path_to_search, pattern, list_pattern_matches, max_matches_allowed, offset)
             matches=len(list_pattern_matches)
         except Exception as e:
             toReturnError={}
@@ -99,9 +99,10 @@ def search_code(pattern:str, path:str='.', is_regex:bool=False):
             toReturnError["message"]=str(e)
             return json.dumps(toReturnError)
     toReturnObject["matches"]=matches
-    toReturnObject["truncated"]=truncated
+    toReturnObject["has_more"]=has_more
     toReturnObject["content"]=list_pattern_matches
     toReturnObject["max_matches_allowed"]=max_matches_allowed
+    toReturnObject["next_offset"]=next_offset
     logging.info("Number of instances matched with literal %s is %d", str(path_to_search), len(list_pattern_matches))
     return json.dumps(toReturnObject)
 

@@ -53,10 +53,10 @@ def validate_start_and_end_line(file_path_object:Path, start_line:int, end_line:
             logging.warning(str(e))
             return False, str(e)
 
-def search_literal_in_file(path: Path, literal:str, list_pattern_matches, max_matches_allowed:int)->bool:
+def search_literal_in_file(path: Path, literal:str, list_pattern_matches:list, max_matches_allowed:int, offset:int)->tuple[int|None,bool]:
     with open(str(path)) as f:
         for lineNumber, line in enumerate(f):
-            if literal in line:
+            if lineNumber+1>=offset and literal in line:
                 if len(list_pattern_matches)<max_matches_allowed:
                     lineData={}
                     lineData["path"]=str(path.resolve())
@@ -65,13 +65,13 @@ def search_literal_in_file(path: Path, literal:str, list_pattern_matches, max_ma
                     list_pattern_matches.append(lineData)
                 else:
                     logging.debug("Number of instances of %s : %d till path %s", literal, len(list_pattern_matches), str(path))
-                    return True
-        return False
+                    return lineNumber+1, True
+        return None, False
 
-def search_pattern_in_file(path:Path, pattern:str, list_pattern_matches, max_matches_allowed)->bool:
+def search_pattern_in_file(path:Path, pattern:str, list_pattern_matches:list, max_matches_allowed:int, offset:int)->tuple[int|None, bool]:
     with open(str(path)) as f:
         for lineNumber, line in enumerate(f):
-            if re.compile(pattern).search(line):
+            if lineNumber+1>=offset and  re.compile(pattern).search(line):
                 if len(list_pattern_matches)<max_matches_allowed:
                     lineData={}
                     lineData["path"]=str(path.resolve())
@@ -80,35 +80,63 @@ def search_pattern_in_file(path:Path, pattern:str, list_pattern_matches, max_mat
                     list_pattern_matches.append(lineData)
                 else:
                     logging.debug("Number of instances of %s : %d till path %s", pattern, len(list_pattern_matches), str(path))
-                    return True
-        return False
+                    return lineNumber+1, True
+        return None, False
 
-def recursive_search_pattern_no_regex(path_to_search:Path, literal:str,list_pattern_matches,  max_matches_allowed:int)->bool:
-    if len(list_pattern_matches)>=max_matches_allowed:
-        return True
-    truncated=False
+def recursive_search_pattern_no_regex(path_to_search:Path, literal:str, list_pattern_matches:list,  max_matches_allowed:int, offset:int)->tuple[int|None, bool]:
+    next_offset_return=None
+    has_more_return=False
     if path_to_search.is_dir():
         for path in path_to_search.iterdir():
             if path.is_dir() and not EXCLUDE_DIRECTORY.search(str(path)):
-                truncated=truncated or recursive_search_pattern_no_regex(path.resolve(), literal, list_pattern_matches, max_matches_allowed)
+                next_offset, has_more=recursive_search_pattern_no_regex(path.resolve(), literal, list_pattern_matches, max_matches_allowed, offset)
+                if next_offset_return==None:
+                    next_offset_return=next_offset
+                elif next_offset!=None:
+                    next_offset_return=min(next_offset_return, next_offset)
+                has_more_return=has_more_return or has_more
             elif INCLUDE.search(str(path)):
-                truncated=truncated or search_literal_in_file(path.resolve(), literal, list_pattern_matches, max_matches_allowed)
-
+                next_offset, has_more = search_literal_in_file(path.resolve(), literal, list_pattern_matches, max_matches_allowed, offset)
+                if next_offset_return==None:
+                    next_offset_return=next_offset
+                elif next_offset!=None:
+                    next_offset_return=min(next_offset_return, next_offset)
+                has_more_return=has_more_return or has_more
     elif INCLUDE.search(str(path_to_search)):
-        truncated=truncated or search_literal_in_file(path_to_search.resolve(),literal, list_pattern_matches, max_matches_allowed)
-    return truncated
+        next_offset, has_more=search_literal_in_file(path_to_search.resolve(),literal, list_pattern_matches, max_matches_allowed, offset)
+        if next_offset_return==None:
+            next_offset_return=next_offset
+        elif next_offset!=None:
+            next_offset_return=min(next_offset_return, next_offset)
+            has_more_return=has_more_return or has_more
 
-def recurisve_search_pattern_regex(path_to_search:Path, pattern:str, list_pattern_matches, max_matches_allowed:int)->bool:
-    if len(list_pattern_matches)>=max_matches_allowed:
-        return True
-    truncated=False
+    return next_offset_return, has_more_return
+
+def recurisve_search_pattern_regex(path_to_search:Path, pattern:str, list_pattern_matches, max_matches_allowed:int, offset:int)->tuple[int|None, bool]:
+    next_offset_return=None
+    has_more_return=False
     if path_to_search.is_dir():
         for path in path_to_search.iterdir():
             if path.is_dir() and not EXCLUDE_DIRECTORY.search(str(path)):
-                truncated=truncated or recurisve_search_pattern_regex(path.resolve(), pattern, list_pattern_matches, max_matches_allowed)
+                next_offset, has_more=recurisve_search_pattern_regex(path.resolve(), pattern, list_pattern_matches, max_matches_allowed, offset)
+                if next_offset_return==None:
+                    next_offset_return=next_offset
+                elif next_offset!=None:
+                    next_offset_return=min(next_offset_return, next_offset)
+                has_more_return=has_more_return or has_more
             elif INCLUDE.search(str(path)):
-                truncated=truncated or search_pattern_in_file(path.resolve(), pattern, list_pattern_matches, max_matches_allowed)
+                next_offset, has_more= search_pattern_in_file(path.resolve(), pattern, list_pattern_matches, max_matches_allowed, offset)
+                if next_offset_return==None:
+                    next_offset_return=next_offset
+                elif next_offset!=None:
+                    next_offset_return=min(next_offset_return, next_offset)
+
 
     elif INCLUDE.search(str(path_to_search)):
-        truncated=truncated or search_pattern_in_file(path_to_search.resolve(),pattern, list_pattern_matches, max_matches_allowed)
-    return truncated
+        next_offset, has_more=search_pattern_in_file(path_to_search.resolve(),pattern, list_pattern_matches, max_matches_allowed, offset)
+        if next_offset_return==None:
+            next_offset_return=next_offset
+        elif next_offset!=None:
+            next_offset_return=min(next_offset_return, next_offset)
+            has_more_return=has_more_return or has_more
+    return next_offset_return, has_more_return
