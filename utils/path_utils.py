@@ -52,6 +52,8 @@ def validate_start_and_end_line(file_path_object:Path, start_line:int, end_line:
         except OSError as e:
             logging.warning(str(e))
             return False, str(e)
+    else:
+        return True, None
 
 def search_literal_in_file(path: Path, literal:str, list_pattern_matches:list, max_matches_allowed:int, offset:int)->tuple[int|None,bool]:
     with open(str(path)) as f:
