@@ -26,15 +26,13 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-@mcp.tool()
-def hello(name:str)->str:
-    return f"Hello, {name}"
-
 mcp.tool()(create_list_files(CODEBASE_PATH)) 
 
 mcp.tool()(create_read_file(CODEBASE_PATH, max_lines))
 
 mcp.tool()(create_search_code(CODEBASE_PATH, max_matches_allowed))
+
+
 
 if __name__=="__main__":
     mcp.run()

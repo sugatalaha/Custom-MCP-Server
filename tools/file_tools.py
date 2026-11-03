@@ -45,6 +45,7 @@ def create_read_file(codebase_path:str, max_lines:int):
                     if count<=end_line_new:
                         lines.append(f"{count}: {line}")
                     else:
+                        truncated=True
                         break
                 count+=1
         toReturnDict["truncated"]=truncated
