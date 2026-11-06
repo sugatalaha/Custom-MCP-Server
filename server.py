@@ -1,6 +1,7 @@
 from mcp.server import MCPServer
 import logging
 from tools.file_tools import *
+from tools.code_tools import *
 import utils.path_utils as utils
 from pathlib import Path
 import json
@@ -31,6 +32,8 @@ mcp.tool()(create_list_files(CODEBASE_PATH))
 mcp.tool()(create_read_file(CODEBASE_PATH, max_lines))
 
 mcp.tool()(create_search_code(CODEBASE_PATH, max_matches_allowed))
+
+mcp.tool()(create_get_file_outline(CODEBASE_PATH))
 
 
 
