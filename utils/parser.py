@@ -8,10 +8,11 @@ def execute_query(language, root_node, query_source, capture_name):
 
     return captures.get(capture_name, [])
 
-def get_file_outline_helper(parse_tree:tree_sitter.Tree,language:tree_sitter.Language, include_functions:bool=True, include_types:bool=True, include_macros:bool=True, include_globals:bool=False)->list:
-    list_data=[]
+def get_file_outline_helper(parse_tree:tree_sitter.Tree,language:tree_sitter.Language, include_functions:bool=True, include_types:bool=True, include_macros:bool=True, include_globals:bool=False)->dict:
+    list_data={}
     if include_functions:
-        functions=execute_query(language,parse_tree.root_node, "(function_defintion) @function", "function")
+        list_data["functions"]=[]
+        functions=execute_query(language,parse_tree.root_node, "(function_definition) @function", "function")
         for function in functions:
             list_data.append(
                 {

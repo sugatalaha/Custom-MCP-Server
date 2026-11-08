@@ -18,7 +18,7 @@ def recursive_file_list(file_list, parent_dir:Path):
         elif(INCLUDE.search(str(path))):
             file_list.append(path.resolve())
 
-def check_is_valid_path(file_path:str, root_dir:Path):
+def check_is_valid_path(file_path:str, root_dir:Path, file_required:bool=False):
     logger.debug("Validating path=%s against root=%s", file_path, root_dir)
     if Path(file_path).is_absolute():
         logger.warning("Absolute path rejected: %s", file_path)
@@ -29,6 +29,13 @@ def check_is_valid_path(file_path:str, root_dir:Path):
         logger.warning("Path does not exist %s in %s", str(requested_path), str(root_dir))
         return False, f"Path {requested_path.resolve()} does not exist in {str(root_dir)}"
     else:
+        if file_required:
+            logger.debug("File required is set true")
+            if requested_path.is_file() and requested_path.suffix in [".c", ".cpp", ".h", ".hpp"]:
+                return True, requested_path
+            else:
+                logger.warning("File is required, but obtained %s", str(requested_path))
+                return False, f"Path {requested_path} is not source code file."
         return True, requested_path
 
 def validate_start_and_end_line(file_path_object:Path, start_line:int, end_line:int):
