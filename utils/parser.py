@@ -37,55 +37,55 @@ def get_functions(language:tree_sitter.Language, root_node)->list:
 
     return functions
 
+def parse_struct(struct_node):
+
+    name_node = struct_node.child_by_field_name("name")
+    body_node = struct_node.child_by_field_name("body")
+
+    struct = {
+            "name": name_node.text.decode() if name_node else None,
+            "attributes": []
+    }
+
+    if body_node is None:
+        return struct
+
+    for field_node in body_node.named_children:
+
+        if field_node.type != "field_declaration":
+            continue
+
+        type_node = field_node.child_by_field_name("type")
+        declarator_node = field_node.child_by_field_name("declarator")
+
+        attribute = {
+            "declaration": field_node.text.decode()
+        }
+
+        if declarator_node:
+            attribute["declarator"] = declarator_node.text.decode()
+
+        if type_node and type_node.type == "struct_specifier":
+
+            nested_name = type_node.child_by_field_name("name")
+
+            attribute["type"] = (
+                "struct " + nested_name.text.decode()
+                if nested_name else "anonymous struct"
+            )
+
+            attribute["nested_struct"] = parse_struct(type_node)
+
+        struct["attributes"].append(attribute)
+
+    return struct
+
 def get_structs(language: tree_sitter.Language, root_node)->list:
     querySourceStruct="(struct_specifier)@struct"
     queryStruct=tree_sitter.Query(language, querySourceStruct)
     queryStructCursor=tree_sitter.QueryCursor(queryStruct)
 
     structCapture=queryStructCursor.captures(root_node)
-
-    def parse_struct(struct_node):
-
-        name_node = struct_node.child_by_field_name("name")
-        body_node = struct_node.child_by_field_name("body")
-
-        struct = {
-            "name": name_node.text.decode() if name_node else None,
-            "attributes": []
-        }
-
-        if body_node is None:
-            return struct
-
-        for field_node in body_node.named_children:
-
-            if field_node.type != "field_declaration":
-                continue
-
-            type_node = field_node.child_by_field_name("type")
-            declarator_node = field_node.child_by_field_name("declarator")
-
-            attribute = {
-                "declaration": field_node.text.decode()
-            }
-
-            if declarator_node:
-                attribute["declarator"] = declarator_node.text.decode()
-
-            if type_node and type_node.type == "struct_specifier":
-
-                nested_name = type_node.child_by_field_name("name")
-
-                attribute["type"] = (
-                    "struct " + nested_name.text.decode()
-                    if nested_name else "anonymous struct"
-                )
-
-                attribute["nested_struct"] = parse_struct(type_node)
-
-            struct["attributes"].append(attribute)
-
-        return struct
 
     structs=[]
 
@@ -105,12 +105,71 @@ def get_structs(language: tree_sitter.Language, root_node)->list:
 
     return structs
 
+def get_unions(language: tree_sitter.Language, root_node)->list:
+    querySourceUnion="(union_specifier)@union"
+    queryUnion=tree_sitter.Query(language, querySourceUnion)
+    queryUnionCursor=tree_sitter.QueryCursor(queryUnion)
+    queryCapture=queryUnionCursor.captures(root_node)
+
+    def parse_union(union_node):
+        name_node=union_node.child_by_field_name("name")
+        body_node=union_node.child_by_field_name("body")
+        union={
+            "name": name_node.text.decode() if name_node is not None else "Anonymous",
+            "attributes":[]
+        }
+        if body_node is None:
+            return union
+
+        for field_node in body_node.named_children:
+            if field_node.type!="field_declaration":
+                continue
+
+            type_node=field_node.child_by_field_name("type")
+            declaration_node=field_node.child_by_field_name("declarator")
+            attribute={
+                "declaration":field_node.text.decode()
+            }
+            if declaration_node:
+                attribute["declarator"]=declaration_node.text.decode()
+
+            if type_node and type_node.type=="struct_specifier":
+                attribute["struct_details"]=parse_struct(type_node)
+            elif type_node and type_node.type=="union_specifier":
+                nested_name=field_node.child_by_field_name("name")
+                attribute["type"]=(
+                    "union "+ nested_name.text.decode() if nested_name else "Anonymous"
+                )
+                attribute["union_details"]=parse_union(type_node)
+            union["attributes"].append(attribute)
+
+        return union
+
+
+    unions=[]
+    for capture in queryCapture.get("union", []):
+        print(capture)
+        nested=False
+        parent=capture.parent
+        while parent is not None:
+            if parent.type=="union_specifier":
+                nested=True
+                break
+            parent=parent.parent
+        if not nested:
+            unions.append(parse_union(capture))
+
+    return unions
+
+
 def get_file_outline_helper(parse_tree:tree_sitter.Tree,language:tree_sitter.Language, include_functions:bool=True, include_types:bool=True, include_macros:bool=True, include_globals:bool=False)->dict:
     list_data={}
     if include_functions:
         list_data["functions"]=get_functions(language, parse_tree.root_node)
     if include_types:
         list_data["structs"]=get_structs(language, parse_tree.root_node)
+        list_data["unions"]=get_unions(language, parse_tree.root_node)
+        
     # if include_types:
     #     structs=execute_query(language, parse_tree.root_node, "(struct_specifier) @struct","struct")
     #     for struct in structs:
