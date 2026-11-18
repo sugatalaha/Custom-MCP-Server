@@ -161,6 +161,57 @@ def get_unions(language: tree_sitter.Language, root_node)->list:
 
     return unions
 
+def get_enums(language:tree_sitter.Language, root_node)->list:
+    enums=[]
+    enumCaptures=execute_query(language, root_node, "(enum_specifier)@enum", "enum")
+    for enumCapture in enumCaptures:
+        enum_name_node=enumCapture.child_by_field_name("name")
+        enum={
+             "name":enum_name_node.text.decode() if enum_name_node is not None else "Anonymous Enum"
+        }
+        parent_node=enumCapture.parent
+        if parent_node is not None and parent_node.type == "type_definition":
+
+            # Extract the typedef declarator
+            declarator_node = parent_node.child_by_field_name("declarator")
+
+            if declarator_node is not None:
+                enum["typedef_name"] = declarator_node.text.decode()
+        body_node=enumCapture.child_by_field_name("body")
+        enum["constants"]=[]
+        if body_node is not None:
+            for body_node_child in body_node.named_children:
+                if body_node_child.type=="enumerator":
+                    enum["constants"].append(body_node_child.text.decode())
+
+        enums.append(enum)
+    return enums
+
+def get_typedefs_primitives(language: tree_sitter.Language, root_node)->list:
+    typedefs = []
+    typedefCaptures=execute_query(language, root_node, "(type_definition)@typedef", "typedef")
+    for typedef_node in typedefCaptures.get("typedef", []):
+
+        type_node = typedef_node.child_by_field_name("type")
+        declarator_node = typedef_node.child_by_field_name("declarator")
+
+        if type_node is None or declarator_node is None:
+            continue
+
+        # Exclude struct, union and enum typedefs
+        if any(child.type in (
+        "struct_specifier",
+        "union_specifier",
+        "enum_specifier"
+    ) for child in type_node.named_children):
+            continue
+
+        typedefs.append({
+        "name": declarator_node.text.decode(),
+        "type": type_node.text.decode()
+    })
+    return typedefs
+
 
 def get_file_outline_helper(parse_tree:tree_sitter.Tree,language:tree_sitter.Language, include_functions:bool=True, include_types:bool=True, include_macros:bool=True, include_globals:bool=False)->dict:
     list_data={}
@@ -169,48 +220,8 @@ def get_file_outline_helper(parse_tree:tree_sitter.Tree,language:tree_sitter.Lan
     if include_types:
         list_data["structs"]=get_structs(language, parse_tree.root_node)
         list_data["unions"]=get_unions(language, parse_tree.root_node)
-        
-    # if include_types:
-    #     structs=execute_query(language, parse_tree.root_node, "(struct_specifier) @struct","struct")
-    #     for struct in structs:
-    #         list_data.append(
-    #             {
-    #                 "type":"struct",
-    #                 "info":struct.text.decode("utf-8")
-    #             }
-    #         )
-    #     unions=execute_query(language, parse_tree.root_node, "(union_specifier) @union", "union")
-    #     for union in unions:
-    #         list_data.append(
-    #             {
-    #                 "type":"union",
-    #                 "info":union.text.decode("utf-8")
-    #             }
-    #         )
-    #     enums=execute_query(language, parse_tree.root_node, "(enum_specifier) @enum", "enum")
-    #     for enum in enums:
-    #         list_data.append(
-    #             {
-    #                 "type":"enum",
-    #                 "info":enum.text.decode("utf-8")
-    #             }
-    #         )
-    #     primitives=execute_query(language, parse_tree.root_node, "(primitive_type) @primitive_type", "primitive_type")
-    #     for primitive in primitives:
-    #         list_data.append(
-    #             {
-    #                 "type":"primitve",
-    #                 "info":primitive.text.decode("utf-8")
-    #             }
-    #         )
-    #     type_definitions=execute_query(language, parse_tree.root_node, "(type_definition) @type_definition" , "type_definition")
-    #     for type_definition in type_definitions:
-    #         list_data.append(
-    #             {
-    #                 "type":"type_definition",
-    #                 "info":type_definition.text.decode("utf-8")
-    #             }
-    #         )
+        list_data["enums"]=get_enums(language, parse_tree.root_node)
+        list_data["typedefs"]=get_typedefs_primitives(language, parse_tree.root_node)
 
     # if include_globals:
     #     global_capture_query="""(translation_unit
