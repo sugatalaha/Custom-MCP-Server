@@ -212,10 +212,45 @@ def get_typedefs_primitives(language: tree_sitter.Language, root_node)->list:
     })
     return typedefs
 
-def get_macros(language: tree_sitter.Language, root_node)->list:
-    pass
+def get_macros(language: tree_sitter.Language, root_node)->dict:
+    query_source = """
+  (preproc_def) @object_macro
+  (preproc_function_def) @function_macro
+  """
+    query = tree_sitter.Query(language, query_source)
+    cursor = tree_sitter.QueryCursor(query)
+    captures = cursor.captures(root_node)
 
-def get_file_outline_helper(parse_tree:tree_sitter.Tree,language:tree_sitter.Language, include_functions:bool=True, include_types:bool=True, include_macros:bool=True, include_globals:bool=False)->dict:
+    object_macros=[]
+
+    for node in captures.get("object_macro", []):
+        object_macro={}
+        name_node=node.child_by_field_name("name")
+        object_macro["name"]=(name_node.text.decode() if name_node else "Anonymous Macro")
+        value_node=node.child_by_field_name("value")
+        object_macro["value"]=(value_node.text.decode() if value_node else "NULL")
+        object_macros.append(object_macro)
+
+    function_macros=[]
+
+    for node in captures.get("function_macro", []):
+        name_node=node.child_by_field_name("name")
+        func_macro={
+            "name":(name_node.text.decode() if name_node else "Anonymous function macro")
+        }
+        func_macro["parameter_list"]=[]
+        param_node=node.child_by_field_name("parameters")
+        for param_child_node in param_node.named_children:
+            if param_child_node.type=="identifier":
+                func_macro["parameter_list"].append(param_child_node.text.decode())
+
+        value_node=node.child_by_field_name("value")
+        func_macro["definition"]=(value_node.text.decode() if value_node else "NULL")
+        function_macros.append(func_macro)
+
+    return object_macros+function_macros
+
+def get_file_outline_helper(parse_tree:tree_sitter.Tree,language:tree_sitter.Language, include_functions:bool=True, include_types:bool=True, include_macros:bool=True)->dict:
     list_data={}
     if include_functions:
         list_data["functions"]=get_functions(language, parse_tree.root_node)
@@ -224,39 +259,8 @@ def get_file_outline_helper(parse_tree:tree_sitter.Tree,language:tree_sitter.Lan
         list_data["unions"]=get_unions(language, parse_tree.root_node)
         list_data["enums"]=get_enums(language, parse_tree.root_node)
         list_data["typedefs"]=get_typedefs_primitives(language, parse_tree.root_node)
-
-    # if include_globals:
-    #     global_capture_query="""(translation_unit
-    #                 (declaration
-    #                         declarator: [
-    #                             (identifier) @global_variable
-    #                             (init_declarator
-    #                                 declarator: (identifier) @global_variable
-    #                             )
-    #                         ]
-    #                     )
-    #                 )"""
-    #     global_captures=execute_query(language, parse_tree.root_node, global_capture_query, "global_variable")
-    #     for global_capture in global_captures:
-    #         list_data.append(
-    #             {
-    #                 "type":"global_identifier",
-    #                 "info":global_capture.text.decode("utf-8")
-    #             }
-    #         )
-
-    # if include_macros:
-    #     macro_capture_query="""[
-    #     (preproc_def) @macro
-    #     (preproc_function_def) @macro
-    #     ]"""
-    #     macros=execute_query(language, parse_tree.root_node, macro_capture_query, "macro")
-    #     for macro in macros:
-    #         list_data.append(
-    #             {
-    #                 "type":"macro",
-    #                 "info":macro.text.decode("utf-8")
-    #             }
-    #         )
+    if include_macros:
+        for key, value in get_macros(language, parse_tree.root_node).items():
+            list_data[key]=value
 
     return list_data

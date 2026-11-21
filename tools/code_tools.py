@@ -19,7 +19,7 @@ oldTreeC=None
 logger=logging.getLogger(__name__)
 
 def create_get_file_outline(codebase_path:str):
-    def get_file_outline(path:str, include_functions:bool=True, include_types:bool=True, include_macros:bool=True, include_globals:bool=False):
+    def get_file_outline(path:str, include_functions:bool=True, include_types:bool=True, include_macros:bool=True):
         global oldTree
         flag, path_or_error=check_is_valid_path(path, codebase_path, file_required=True)
         if not flag:
@@ -47,7 +47,7 @@ def create_get_file_outline(codebase_path:str):
                         oldTreeCPP=parser.parse(source_code_bytes.encode())
                     else:
                         oldTreeCPP=parser.parse(source_code_bytes.encode(), oldTreeCPP)
-                    toReturnObject["content"]=get_file_outline_helper(oldTreeCPP, CPP_LANGUAGE,include_functions, include_types, include_macros, include_globals)
+                    toReturnObject["content"]=get_file_outline_helper(oldTreeCPP, CPP_LANGUAGE,include_functions, include_types, include_macros)
                     return json.dumps(toReturnObject)
                 else:
                     logger.warning("Obtained suffix is %s", source_code_path.suffix)
