@@ -212,6 +212,8 @@ def get_typedefs_primitives(language: tree_sitter.Language, root_node)->list:
     })
     return typedefs
 
+def get_macros(language: tree_sitter.Language, root_node)->list:
+    pass
 
 def get_file_outline_helper(parse_tree:tree_sitter.Tree,language:tree_sitter.Language, include_functions:bool=True, include_types:bool=True, include_macros:bool=True, include_globals:bool=False)->dict:
     list_data={}
