@@ -190,7 +190,7 @@ def get_enums(language:tree_sitter.Language, root_node)->list:
 def get_typedefs_primitives(language: tree_sitter.Language, root_node)->list:
     typedefs = []
     typedefCaptures=execute_query(language, root_node, "(type_definition)@typedef", "typedef")
-    for typedef_node in typedefCaptures.get("typedef", []):
+    for typedef_node in typedefCaptures:
 
         type_node = typedef_node.child_by_field_name("type")
         declarator_node = typedef_node.child_by_field_name("declarator")
@@ -212,7 +212,7 @@ def get_typedefs_primitives(language: tree_sitter.Language, root_node)->list:
     })
     return typedefs
 
-def get_macros(language: tree_sitter.Language, root_node)->dict:
+def get_macros(language: tree_sitter.Language, root_node)->list:
     query_source = """
   (preproc_def) @object_macro
   (preproc_function_def) @function_macro
@@ -260,7 +260,6 @@ def get_file_outline_helper(parse_tree:tree_sitter.Tree,language:tree_sitter.Lan
         list_data["enums"]=get_enums(language, parse_tree.root_node)
         list_data["typedefs"]=get_typedefs_primitives(language, parse_tree.root_node)
     if include_macros:
-        for key, value in get_macros(language, parse_tree.root_node).items():
-            list_data[key]=value
+        list_data["macros"]=get_macros(language, parse_tree.root_node)
 
     return list_data
