@@ -25,7 +25,7 @@ def check_is_valid_path(file_path:str, root_dir:Path, file_required:bool=False):
         return False, f"Path {file_path} is absolute path. Provide path relative to codebase {root_dir}"
     requested_path=(root_dir/file_path).resolve()
     logger.debug("Resolved requested Path: %s", requested_path)
-    if not requested_path.is_relative_to(root_dir):
+    if not requested_path.is_relative_to(root_dir) or not requested_path.exists():
         logger.warning("Path does not exist %s in %s", str(requested_path), str(root_dir))
         return False, f"Path {requested_path.resolve()} does not exist in {str(root_dir)}"
     else:

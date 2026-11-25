@@ -4,7 +4,7 @@ import tree_sitter
 from pathlib import Path
 import logging
 import json
-from utils.parser import get_file_outline_helper
+from utils.parser import get_file_outline_helper, extract_cpp_classes
 from utils.path_utils import check_is_valid_path
 import utils.path_utils as utils
 
@@ -37,7 +37,7 @@ def create_get_file_outline(codebase_path:str):
                         oldTreeC=parser.parse(source_code_bytes.encode())
                     else:
                         oldTreeC=parser.parse(source_code_bytes.encode(), oldTreeC)
-                    toReturnObject["content"]=get_file_outline_helper(oldTreeC, C_LANGUAGE)
+                    toReturnObject["content"]=get_file_outline_helper(oldTreeC, C_LANGUAGE,include_functions, include_types, include_macros)
                     return json.dumps(toReturnObject)
                 elif(source_code_path.suffix in [".cpp", ".hpp"]):
                     parser=tree_sitter.Parser(CPP_LANGUAGE)
@@ -47,7 +47,7 @@ def create_get_file_outline(codebase_path:str):
                         oldTreeCPP=parser.parse(source_code_bytes.encode())
                     else:
                         oldTreeCPP=parser.parse(source_code_bytes.encode(), oldTreeCPP)
-                    toReturnObject["content"]=get_file_outline_helper(oldTreeCPP, CPP_LANGUAGE,include_functions, include_types, include_macros)
+                    toReturnObject["content"]=extract_cpp_classes(oldTreeCPP.root_node)
                     return json.dumps(toReturnObject)
                 else:
                     logger.warning("Obtained suffix is %s", source_code_path.suffix)

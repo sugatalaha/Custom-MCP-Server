@@ -1,4 +1,5 @@
 import tree_sitter
+import re
 
 def execute_query(language, root_node, query_source, capture_name):
     query=tree_sitter.Query(language, query_source)
@@ -7,6 +8,246 @@ def execute_query(language, root_node, query_source, capture_name):
     captures = cursor.captures(root_node)
 
     return captures.get(capture_name, [])
+
+
+def extract_cpp_classes(root_node):
+    """
+    Extract C++ classes and structs.
+
+    Args:
+        language: Tree-sitter C++ Language object.
+        root_node: parse_tree.root_node.
+
+    Returns:
+        List of dictionaries containing class information.
+    """
+
+    classes = []
+
+    def get_text(node):
+        return node.text.decode("utf-8", errors="replace") if node else ""
+
+    def descendants(node):
+        """Yield node and all its descendants."""
+        yield node
+        for child in node.children:
+            yield from descendants(child)
+
+    def find_child(node, node_type):
+        for child in node.children:
+            if child.type == node_type:
+                return child
+        return None
+
+    def get_name(node):
+        name_node = node.child_by_field_name("name")
+
+        if name_node:
+            return get_text(name_node)
+
+        # Fallback for grammar variations.
+        for child in node.named_children:
+            if child.type in ("type_identifier", "identifier"):
+                return get_text(child)
+
+        return None
+
+    def get_declarator_name(node):
+        """
+        Extract the identifier from a field or function declarator.
+        """
+
+        if node is None:
+            return None
+
+        identifiers = []
+
+        valid_types = {
+            "identifier",
+            "field_identifier",
+            "type_identifier",
+            "operator_name",
+            "destructor_name"
+        }
+
+        for child in descendants(node):
+            if child.type in valid_types and not child.children:
+                identifiers.append(get_text(child))
+
+        return identifiers[-1] if identifiers else None
+
+    def get_member_name(node, is_method):
+        target_type = (
+            "function_declarator"
+            if is_method else "field_declarator"
+        )
+
+        candidates = [
+            child for child in descendants(node)
+            if child.type == target_type
+        ]
+
+        if not candidates:
+            return None
+
+        declarator = candidates[0].child_by_field_name("declarator")
+
+        if declarator is None:
+            declarator = candidates[0]
+
+        return get_declarator_name(declarator)
+
+    def get_access(node, default_access):
+        text = get_text(node).strip()
+
+        if text in ("public", "private", "protected"):
+            return text
+
+        return default_access
+
+    def extract_bases(node, default_access):
+        bases = []
+
+        base_clause = find_child(node, "base_class_clause")
+
+        if not base_clause:
+            return bases
+
+        for child in base_clause.named_children:
+
+            if child.type != "base_class_specifier":
+                continue
+
+            signature = get_text(child).strip()
+
+            access_match = re.search(
+                r"\b(public|private|protected)\b",
+                signature
+            )
+
+            access = (
+                access_match.group(1)
+                if access_match else default_access
+            )
+
+            base_name = re.sub(
+                r"\b(public|private|protected|virtual)\b",
+                "",
+                signature
+            ).strip()
+
+            bases.append({
+                "name": base_name,
+                "access": access
+            })
+
+        return bases
+
+    def extract_members(class_body, default_access):
+
+        members = []
+        current_access = default_access
+
+        if class_body is None:
+            return members
+
+        for child in class_body.named_children:
+
+            node_type = child.type
+
+            # Ignore comments.
+            if node_type == "comment":
+                continue
+
+            # Track current access specifier.
+            if node_type == "access_specifier":
+                current_access = get_access(
+                    child, current_access
+                )
+                continue
+
+            # Member function declaration or data declaration.
+            if node_type == "field_declaration":
+
+                is_method = any(
+                    n.type == "function_declarator"
+                    for n in descendants(child)
+                )
+
+                members.append({
+                    "name": get_member_name(child, is_method),
+                    "kind": "method" if is_method else "field",
+                    "access": current_access,
+                    "signature": get_text(child).strip()
+                })
+
+            # Inline method definition.
+            elif node_type == "function_definition":
+
+                members.append({
+                    "name": get_member_name(child, True),
+                    "kind": "method",
+                    "access": current_access,
+                    "signature": get_text(child).strip()
+                })
+
+            # Preserve declarations not yet supported.
+            else:
+                members.append({
+                    "name": None,
+                    "kind": "other",
+                    "access": current_access,
+                    "signature": get_text(child).strip()
+                })
+
+        return members
+
+    # Collect class and struct nodes.
+    class_nodes = []
+
+    def traverse(node):
+        if node.type in ("class_specifier", "struct_specifier"):
+            class_nodes.append(node)
+
+        for child in node.children:
+            traverse(child)
+
+    traverse(root_node)
+
+    for node in class_nodes:
+
+        source = get_text(node).strip()
+
+        kind_match = re.match(r"(class|struct|union)\b", source)
+
+        if not kind_match:
+            continue
+
+        kind = kind_match.group(1)
+        name = get_name(node)
+
+        if not name:
+            continue
+
+        default_access = (
+            "public" if kind in ("struct", "union")
+            else "private"
+        )
+
+        class_body = find_child(node, "field_declaration_list")
+
+        classes.append({
+            "name": name,
+            "kind": kind,
+            "is_forward_declaration": class_body is None,
+            "bases": extract_bases(node, default_access),
+            "members": extract_members(
+                class_body, default_access
+            )
+        })
+
+    return classes
+
 
 def get_functions(language:tree_sitter.Language, root_node)->list:
     querySource="(function_definition)@function"
