@@ -18,14 +18,14 @@ def recursive_file_list(file_list, parent_dir:Path):
         elif(INCLUDE.search(str(path))):
             file_list.append(path.resolve())
 
-def check_is_valid_path(file_path:str, root_dir:Path, file_required:bool=False):
+def check_is_valid_path(file_path:str, root_dir:str, file_required:bool=False):
     logger.debug("Validating path=%s against root=%s", file_path, root_dir)
     if Path(file_path).is_absolute():
         logger.warning("Absolute path rejected: %s", file_path)
         return False, f"Path {file_path} is absolute path. Provide path relative to codebase {root_dir}"
-    requested_path=(root_dir/file_path).resolve()
+    requested_path=(Path(root_dir)/Path(file_path)).resolve()
     logger.debug("Resolved requested Path: %s", requested_path)
-    if not requested_path.is_relative_to(root_dir) or not requested_path.exists():
+    if not requested_path.is_relative_to(Path(root_dir)) or not requested_path.exists():
         logger.warning("Path does not exist %s in %s", str(requested_path), str(root_dir))
         return False, f"Path {requested_path.resolve()} does not exist in {str(root_dir)}"
     else:
