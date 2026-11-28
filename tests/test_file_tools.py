@@ -69,4 +69,16 @@ def test_list_files_invalid_path(list_files_tool, invalid_path):
     # Tighten this assertion using the exact error
     # returned by check_is_valid_path().
 
-
+@pytest.mark.parametrize(("invalid_path", "start", "end"),
+                         [
+                             ("etc", 1, None),
+                             ("../opt", 1, 25),
+                             ("/os", 25, 2),
+                             ("module", 2, 53),
+                             ("module.c", 1, 25)
+                         ])
+def test_read_files_invalid_paths(read_file_tool, invalid_path, start, end):
+    result=read_file_tool(invalid_path, start, end)
+    print(result)
+    assert isinstance(result, str)
+    assert len(result)>0
